@@ -119,8 +119,5 @@ check-setup:
 	ping6 -n -c 1 ${DST_OUT6}
 	route -n get -inet6 ${SRT_IN6} | grep -q 'gateway: ${DST_IN6}$$'
 	ndp -n ${DST_IN6} | grep -q ' ${DST_MAC} '
-.if defined(REMOTE_SSH)
-	ssh ${REMOTE_SSH} ${SUDO} pfctl -si | grep '^Status: Disabled '
-.endif
 
 .include <bsd.regress.mk>
