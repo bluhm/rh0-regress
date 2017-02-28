@@ -75,18 +75,35 @@ PYTHON =	python2.7 ./
 PYTHON =	PYTHONPATH=${.OBJDIR} python2.7 ${.CURDIR}/
 .endif
 
+stamp-stack:
+	rm -f stamp-stack stamp-pf
+	-ssh -t ${REMOTE_SSH} ${SUDO} pfctl -d
+	ssh -t ${REMOTE_SSH} ${SUDO} pfctl -a regress -Fr
+	date >$@
+
+stamp-pf:
+	rm -f stamp-stack stamp-pf
+	echo 'pass proto tcp from port ssh no state\n'\
+	    'pass proto tcp to port ssh no state'|\
+	    ssh -t ${REMOTE_SSH} ${SUDO} pfctl -a regress -f -
+	-ssh -t ${REMOTE_SSH} ${SUDO} pfctl -e
+	date >$@
+
 RH0_SCRIPTS !!=		cd ${.CURDIR} && ls -1 rh0*.py
 
 .for s in ${RH0_SCRIPTS}
-run-regress-${s}: addr.py
+run-regress-${s}: addr.py stamp-stack
 	@echo '\n======== $@ ========'
 	${SUDO} ${PYTHON}${s}
 .endfor
 
 REGRESS_TARGETS =	${RH0_SCRIPTS:S/^/run-regress-/}
 
+# After running the tests, turn on pf on remote machine.
+# This is the expected default configuration.
+REGRESS_TARGETS +=      stamp-pf
 
-CLEANFILES +=		addr.py *.pyc *.log
+CLEANFILES +=		addr.py *.pyc *.log stamp-*
 
 .PHONY: check-setup
 
