@@ -75,60 +75,44 @@ PYTHON =	python2.7 ./
 PYTHON =	PYTHONPATH=${.OBJDIR} python2.7 ${.CURDIR}/
 .endif
 
-# Send ping6 packet without routing header type 0
 TARGETS +=	rh0-none
 run-regress-rh0-none: addr.py
 	@echo '\n======== $@ ========'
-	@echo Check without routing header type 0
 	${SUDO} ${PYTHON}rh0_none.py
 
-# Send ping6 packet with routing header type 0 but empty address list
 TARGETS +=	rh0-empty
 run-regress-rh0-empty: addr.py
 	@echo '\n======== $@ ========'
-	@echo Check routing header type 0 with empty address list
 	${SUDO} ${PYTHON}rh0_empty.py
 
 TARGETS +=	rh0-final
-# Send ping6 packet with routing header type 0 to the final destination
 run-regress-rh0-final: addr.py
 	@echo '\n======== $@ ========'
-	@echo Check routing header type 0 to the final destination
 	${SUDO} ${PYTHON}rh0_final.py
 
 TARGETS +=	rh0-route
-# Send ping6 packet with routing header type 0 to be source routed
 run-regress-rh0-route: addr.py
 	@echo '\n======== $@ ========'
-	@echo Check routing header type 0 to be source routed
 	${SUDO} ${PYTHON}rh0_route.py
 
-# Send with fragment and routing header type 0 but empty address list
 TARGETS +=	rh0-frag-empty
 run-regress-rh0-frag-empty: addr.py
 	@echo '\n======== $@ ========'
-	@echo Check fragment and routing header type 0 with empty address list
 	${SUDO} ${PYTHON}rh0_frag_empty.py
 
 TARGETS +=	rh0-frag-final
-# Send with fragment and routing header type 0 to the final destination
 run-regress-rh0-frag-final: addr.py
 	@echo '\n======== $@ ========'
-	@echo Check fragment and routing header type 0 to the final destination
 	${SUDO} ${PYTHON}rh0_frag_final.py
 
 TARGETS +=	rh0-frag-route
-# Send with fragment and routing header type 0 to be source routed
 run-regress-rh0-frag-route: addr.py
 	@echo '\n======== $@ ========'
-	@echo Check fragment and routing header type 0 to be source routed
 	${SUDO} ${PYTHON}rh0_frag_route.py
 
 TARGETS +=	rh0-frag2
-# Send with fragment and routing header type 0 to be source routed
 run-regress-rh0-frag2: addr.py
 	@echo '\n======== $@ ========'
-	@echo Check routing header type 0 in the second fragment
 	${SUDO} ${PYTHON}rh0_frag2.py
 
 REGRESS_TARGETS =	${TARGETS:S/^/run-regress-/}
