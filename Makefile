@@ -110,18 +110,32 @@ REGRESS_TARGETS +=      stamp-pf
 
 CLEANFILES +=		addr.py *.pyc *.log stamp-*
 
-.PHONY: check-setup
+.PHONY: check-setup check-setup-local check-setup-remote
 
 # Check wether the address, route and remote setup is correct
-check-setup:
+check-setup: check-setup-local check-setup-remote
+
+check-setup-local:
 	@echo '\n======== $@ ========'
-	route -n get -inet6 ${LOCAL_ADDR6} | grep -q 'flags: .*LOCAL'
-	ping6 -n -c 1 ${LOCAL_ADDR6}
-	route -n get -inet6 ${REMOTE_ADDR6} | grep -q 'interface: ${LOCAL_IF}$$'
-	ping6 -n -c 1 ${REMOTE_ADDR6}
+	ping -n -c 1 ${LOCAL_ADDR}  # LOCAL_ADDR
+	route -n get -inet6 ${LOCAL_ADDR6} |\
+	    grep -q 'flags: .*LOCAL'  # LOCAL_ADDR6
+	ping6 -n -c 1 ${REMOTE_ADDR6}  # REMOTE_ADDR6
+	route -n get -inet6 ${REMOTE_ADDR6} |\
+	    grep -q 'interface: ${LOCAL_IF}$$'  # REMOTE_ADDR6 LOCAL_IF
 	route -n get -inet6 ${DST_OUT6} | grep -q 'gateway: ${REMOTE_ADDR6}$$'
 	ping6 -n -c 1 ${DST_OUT6}
 	route -n get -inet6 ${SRT_IN6} | grep -q 'gateway: ${REMOTE_ADDR6}$$'
-	ndp -n ${REMOTE_ADDR6} | grep -q ' ${REMOTE_MAC} '
+	ndp -n ${REMOTE_ADDR6} |\
+	    grep -q ' ${REMOTE_MAC} '  # REMOTE_ADDR6 REMOTE_MAC
+
+check-setup-remote:
+	@echo '\n======== $@ ========'
+	ssh ${REMOTE_SSH} ping -n -c 1 ${REMOTE_ADDR}  # REMOTE_ADDR
+	ssh ${REMOTE_SSH} route -n get -inet6 ${REMOTE_ADDR6} |\
+	    grep -q 'flags: .*LOCAL'  # REMOTE_ADDR6
+	ssh ${REMOTE_SSH} ping6 -n -c 1 ${LOCAL_ADDR6}  # LOCAL_ADDR6
+	ssh ${REMOTE_SSH} ndp -n ${LOCAL_ADDR6} |\
+	    grep -q ' ${LOCAL_MAC} '  # LOCAL_ADDR6 LOCAL_MAC
 
 .include <bsd.regress.mk>
