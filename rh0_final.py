@@ -12,7 +12,8 @@ from scapy.all import *
 eid=os.getpid() & 0xffff
 payload="ABCDEFGHIJKLMNOP"
 packet=IPv6(src=LOCAL_ADDR6, dst=REMOTE_ADDR6)/\
-    IPv6ExtHdrRouting(addresses=[SOURCE_ROUTE_1_ADDR6, SOURCE_ROUTE_2_ADDR6], segleft=0)/\
+    IPv6ExtHdrRouting(addresses=[OTHER_FAKE1_ADDR6, OTHER_FAKE2_ADDR6], \
+    segleft=0)/\
     ICMPv6EchoRequest(id=eid, data=payload)
 eth=Ether(src=LOCAL_MAC, dst=REMOTE_MAC)/packet
 
