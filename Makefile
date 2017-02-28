@@ -32,15 +32,17 @@ regress:
 # Configure Addresses on the machines.
 # Adapt interface and address variables to your local setup.
 
-LOCAL_IF ?=
-LOCAL_MAC ?=
-REMOTE_MAC ?=
+LOCAL_IF ?=	em1
+LOCAL_MAC ?=	00:1b:21:0e:6e:8e
+REMOTE_MAC ?=	00:04:23:b0:68:8e
 
-LOCAL_ADDR6 ?=
-REMOTE_ADDR6 ?=
-OTHER_ADDR6 ?=
-OTHER_FAKE1_ADDR6 ?=
-OTHER_FAKE2_ADDR6 ?=
+LOCAL_ADDR6 ?=	fdd7:e83e:66bc:81::21
+REMOTE_ADDR6 ?=	fdd7:e83e:66bc:81::22
+OTHER_ADDR6 ?=	fdd7:e83e:66bc:82::22
+OTHER_FAKE1_ADDR6 ?=	fdd7:e83e:66bc:82::dead
+OTHER_FAKE2_ADDR6 ?=	fdd7:e83e:66bc:82::beef
+
+REMOTE_SSH ?=
 
 .if empty (LOCAL_IF) || empty (LOCAL_MAC) || empty (REMOTE_MAC) || \
     empty (LOCAL_ADDR6) || empty (REMOTE_ADDR6) || empty(OTHER_ADDR6) || \
