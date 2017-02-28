@@ -55,6 +55,15 @@ regress:
 	@echo SKIPPED
 .endif
 
+.MAIN: all
+
+.if make (regress) || make (all)
+.BEGIN: addr.py
+	@echo
+	${SUDO} true
+	rm -f stamp-stack stamp-pf
+.endif
+
 depend: addr.py
 
 # Create python include file containing the addresses.
