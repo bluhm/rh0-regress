@@ -16,7 +16,7 @@ fid=pid & 0xffffffff
 payload="ABCDEFGHIJKLMNOP"
 packet=IPv6(src=LOCAL_ADDR6, dst=REMOTE_ADDR6)/\
     IPv6ExtHdrFragment(id=fid)/\
-    IPv6ExtHdrRouting(addresses=[SRT_IN6, SRT_OUT6], segleft=0)/\
+    IPv6ExtHdrRouting(addresses=[SOURCE_ROUTE_1_ADDR6, SOURCE_ROUTE_2_ADDR6], segleft=0)/\
     ICMPv6EchoRequest(id=eid, data=payload)
 eth=Ether(src=LOCAL_MAC, dst=REMOTE_MAC)/packet
 

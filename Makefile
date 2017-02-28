@@ -37,19 +37,18 @@ REMOTE_MAC ?=
 
 LOCAL_ADDR6 ?=
 REMOTE_ADDR6 ?=
-DST_OUT6 ?=
-SRT_IN6 ?=
-SRT_OUT6 ?=
+SOURCE_ROUTE_1_ADDR6 ?=
+SOURCE_ROUTE_2_ADDR6 ?=
 
 .if empty (LOCAL_IF) || empty (LOCAL_MAC) || empty (REMOTE_MAC) || \
-    empty (LOCAL_ADDR6) || empty (REMOTE_ADDR6) || empty (DST_OUT6) || \
-    empty (SRT_IN6) || empty (SRT_OUT6) || empty (REMOTE_SSH)
+    empty (LOCAL_ADDR6) || empty (REMOTE_ADDR6) || empty (REMOTE_SSH) || \
+    empty (SOURCE_ROUTE_1_ADDR6) || empty (SOURCE_ROUTE_2_ADDR6)
 .BEGIN:
 	@true
 regress:
 	@echo This tests needs a remote machine to operate on.
-	@echo LOCAL_IF LOCAL_MAC REMOTE_MAC LOCAL_ADDR6 REMOTE_ADDR6 DST_OUT6
-	@echo SRT_IN6 SRT_OUT6 REMOTE_SSH are empty.
+	@echo LOCAL_IF LOCAL_MAC REMOTE_MAC LOCAL_ADDR6 REMOTE_ADDR6
+	@echo SOURCE_ROUTE_1_ADDR6 SOURCE_ROUTE_2_ADDR6 REMOTE_SSH
 	@echo Fill out these variables for additional tests.
 	@echo SKIPPED
 .endif
@@ -71,7 +70,7 @@ addr.py: Makefile
 	echo 'LOCAL_IF = "${LOCAL_IF}"' >>$@.tmp
 	echo 'LOCAL_MAC = "${LOCAL_MAC}"' >>$@.tmp
 	echo 'REMOTE_MAC = "${REMOTE_MAC}"' >>$@.tmp
-.for var in LOCAL_ADDR REMOTE_ADDR DST_OUT SRT_IN SRT_OUT
+.for var in LOCAL_ADDR REMOTE_ADDR SOURCE_ROUTE_1_ADDR SOURCE_ROUTE_2_ADDR
 	echo '${var}6 = "${${var}6}"' >>$@.tmp
 .endfor
 	mv $@.tmp $@
@@ -127,9 +126,7 @@ check-setup-local:
 	ping6 -n -c 1 ${REMOTE_ADDR6}  # REMOTE_ADDR6
 	route -n get -inet6 ${REMOTE_ADDR6} |\
 	    grep -q 'interface: ${LOCAL_IF}$$'  # REMOTE_ADDR6 LOCAL_IF
-	route -n get -inet6 ${DST_OUT6} | grep -q 'gateway: ${REMOTE_ADDR6}$$'
-	ping6 -n -c 1 ${DST_OUT6}
-	route -n get -inet6 ${SRT_IN6} | grep -q 'gateway: ${REMOTE_ADDR6}$$'
+	route -n get -inet6 ${SOURCE_ROUTE_1_ADDR6} | grep -q 'gateway: ${REMOTE_ADDR6}$$'
 	ndp -n ${REMOTE_ADDR6} |\
 	    grep -q ' ${REMOTE_MAC} '  # REMOTE_ADDR6 REMOTE_MAC
 
