@@ -75,47 +75,16 @@ PYTHON =	python2.7 ./
 PYTHON =	PYTHONPATH=${.OBJDIR} python2.7 ${.CURDIR}/
 .endif
 
-TARGETS +=	rh0-none
-run-regress-rh0-none: addr.py
-	@echo '\n======== $@ ========'
-	${SUDO} ${PYTHON}rh0_none.py
+RH0_SCRIPTS !!=		cd ${.CURDIR} && ls -1 rh0*.py
 
-TARGETS +=	rh0-empty
-run-regress-rh0-empty: addr.py
+.for s in ${RH0_SCRIPTS}
+run-regress-${s}: addr.py
 	@echo '\n======== $@ ========'
-	${SUDO} ${PYTHON}rh0_empty.py
+	${SUDO} ${PYTHON}${s}
+.endfor
 
-TARGETS +=	rh0-final
-run-regress-rh0-final: addr.py
-	@echo '\n======== $@ ========'
-	${SUDO} ${PYTHON}rh0_final.py
+REGRESS_TARGETS =	${RH0_SCRIPTS:S/^/run-regress-/}
 
-TARGETS +=	rh0-route
-run-regress-rh0-route: addr.py
-	@echo '\n======== $@ ========'
-	${SUDO} ${PYTHON}rh0_route.py
-
-TARGETS +=	rh0-frag-empty
-run-regress-rh0-frag-empty: addr.py
-	@echo '\n======== $@ ========'
-	${SUDO} ${PYTHON}rh0_frag_empty.py
-
-TARGETS +=	rh0-frag-final
-run-regress-rh0-frag-final: addr.py
-	@echo '\n======== $@ ========'
-	${SUDO} ${PYTHON}rh0_frag_final.py
-
-TARGETS +=	rh0-frag-route
-run-regress-rh0-frag-route: addr.py
-	@echo '\n======== $@ ========'
-	${SUDO} ${PYTHON}rh0_frag_route.py
-
-TARGETS +=	rh0-frag2
-run-regress-rh0-frag2: addr.py
-	@echo '\n======== $@ ========'
-	${SUDO} ${PYTHON}rh0_frag2.py
-
-REGRESS_TARGETS =	${TARGETS:S/^/run-regress-/}
 
 CLEANFILES +=		addr.py *.pyc *.log
 
