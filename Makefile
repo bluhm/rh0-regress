@@ -46,7 +46,8 @@ REMOTE_SSH ?=
 
 .if empty (LOCAL_IF) || empty (LOCAL_MAC) || empty (REMOTE_MAC) || \
     empty (LOCAL_ADDR6) || empty (REMOTE_ADDR6) || empty(OTHER_ADDR6) || \
-    empty (OTHER_FAKE1_ADDR6) || empty (OTHER_FAKE2_ADDR6) || empty (REMOTE_SSH)
+    empty (OTHER_FAKE1_ADDR6) || empty (OTHER_FAKE2_ADDR6) || \
+    empty (REMOTE_SSH)
 .BEGIN:
 	@true
 regress:
